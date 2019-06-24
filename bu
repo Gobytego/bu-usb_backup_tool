@@ -2,8 +2,8 @@
 
 # BU -- USB Backup Tool (Version 1.0) -- by Joe Collins. (www.ezeelinux.com)
 # this fork for solus had been provided by Adam Singer (Gobytego.com)
-# A simple tool to create reliable backups of /etc/ and /home from multiple
-# Solus OS Linux systems. (Jun 24 2019)
+# A simple tool to create reliable backups of /etc/ and /home for
+# Solus OS Linux. (Jun 24 2019)
 # (GNU/General Public License version 2.0)
 #
 # For Solus OS.
