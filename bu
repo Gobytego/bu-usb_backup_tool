@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # BU -- USB Backup Tool (Version 1.0) -- by Joe Collins. (www.ezeelinux.com)
+# this fork for solus had been provided by Adam Singer (Gobytego.com)
 # A simple tool to create reliable backups of /etc/ and /home from multiple
-# Debian/Ubuntu Linux systems. (May 10, 2019)
+# Solus OS Linux systems. (Jun 24 2019)
 # (GNU/General Public License version 2.0)
 #
-# For Debian 9 and up, Ubuntu 16.04 and up and Linux Mint 18.x and up.
+# For Solus OS.
 #
 # ...And away we go!
 
@@ -17,8 +18,8 @@ host=$HOSTNAME
 
 # Check for less and rsync, install if needed:
 
-dpkg -l | grep -qw rsync || sudo apt install rsync -yyq
-dpkg -l | grep -qw less || sudo apt install less -yyq
+eopkg li | grep -qw rsync || sudo eopkg it rsync -yq
+eopkg li | grep -qw less || sudo eopkg it less -yq
 
 # Set functions:
 
@@ -39,7 +40,7 @@ fi
 
 # Checking for a USB drive that is setup for BU:
 
-if [ ! -d /media/$user/BU_Drive ]; then
+if [ ! -d /run/media/$user/BU_Drive ]; then
 
     echo $'\n'$"BU Error: No USB drive with a partition labeled "BU_Drive!"" >&2
     echo "- The drive(s) you have plugged in are not ready for use with BU." >&2
@@ -61,11 +62,11 @@ sudo ls >/dev/null
 # Making sure user has ownership of the BU_Drive:
 
 echo "Changing ownership of BU_Drive to $user..."
-sudo chown $user /media/${user}/BU_Drive/
+sudo chown $user /run/media/${user}/BU_Drive/
 
 # Creating machine specific directories:
 echo "Checking for/creating machine specific directories..."
-mkdir -p /media/$user/BU_Drive/BU_Backups/$host
+mkdir -p /run/media/$user/BU_Drive/BU_Backups/$host
 
 # Check if directory for host machine was successfully created:
 
@@ -84,7 +85,7 @@ fi
 
 echo "Backing up /etc and /home to BU_Drive/BU_Backups/$host/..."
 sudo rsync -aH --delete --info=progress2 /etc /home \
-/media/$user/BU_Drive/BU_Backups/$host/
+/run/media/$user/BU_Drive/BU_Backups/$host/
 
 # Check for status of backup and exit:
 
@@ -119,7 +120,7 @@ restore() {
 
 # Check for the host's backup directory:
 
-if [ ! -d /media/$user/BU_Drive/BU_Backups/$host/ ]; then
+if [ ! -d /run/media/$user/BU_Drive/BU_Backups/$host/ ]; then
 
     echo "BU Error: Cannot find valid backup directory for $host!" >&2
     echo "- This drive may not have been used to backup this machine." >&2
@@ -143,7 +144,7 @@ read -n 1 -s choice
         read -n 1 -s
         echo $'\n'$"Restoring /home... Please DO NOT open any applications."
         sudo rsync -aH --delete --info=progress2 \
-        /media/$user/BU_Drive/BU_Backups/$host/home/ /home/
+        /run/media/$user/BU_Drive/BU_Backups/$host/home/ /home/
 
             # Checking status of rsync exit code:
 
