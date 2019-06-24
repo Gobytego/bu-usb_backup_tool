@@ -1,4 +1,4 @@
-# bu-usb_backup_tool
+# bu-usb_backup_tool SolusOS edition
 
 1. Description:
 
