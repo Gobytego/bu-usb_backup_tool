@@ -18,8 +18,8 @@ host=$HOSTNAME
 
 # Check for less and rsync, install if needed:
 
-eopkg li | grep -qw rsync || sudo eopkg it rsync -yq
-eopkg li | grep -qw less || sudo eopkg it less -yq
+eopkg li | grep -qw rsync || sudo eopkg it rsync -y
+eopkg li | grep -qw less || sudo eopkg it less -y
 
 # Set functions:
 
