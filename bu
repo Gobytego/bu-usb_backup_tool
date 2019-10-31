@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# BU -- USB Backup Tool (Version 1.0) -- by Joe Collins. (www.ezeelinux.com)
-# this fork for solus had been provided by Adam Singer (Gobytego.com)
+# BU -- USB Backup Tool (Version 1.1) -- by Joe Collins. (www.ezeelinux.com)
+# this fork for solus had been provided by Adam Singer (gobytego.com)
 # A simple tool to create reliable backups of /etc/ and /home for
-# Solus OS Linux. (Jun 24 2019)
+# Solus OS Linux. (Oct 30 2019)
 # (GNU/General Public License version 2.0)
 #
 # For Solus OS.
@@ -20,6 +20,7 @@ host=$HOSTNAME
 
 eopkg li | grep -qw rsync || sudo eopkg it rsync -y
 eopkg li | grep -qw less || sudo eopkg it less -y
+
 
 # Set functions:
 
@@ -93,9 +94,15 @@ if [ "$?" == "0" ]; then
 
     # Clear any accidental input during backup:
     read -t 1 -n 10000 discard
+
     echo "------------------"
     echo "- All backed up! -"
     echo "------------------"
+
+    # Remove old and create new timestamp file:
+    rm -f /run/media/$user/BU_Drive/BU_Backups/$host/BU\ Backup* >/dev/null 2>&1
+    touch /run/media/$user/BU_Drive/BU_Backups/$host/"BU Backup was successful: $(date)"
+
     echo "Wait! Syncing Drives..."
     sync
     echo "...done"
@@ -106,6 +113,11 @@ else
 
     # Clear any accidental input during backup:
     read -t 1 -n 10000 discard
+
+    # Remove old and create new timestamp file:
+    rm -f /run/media/$user/BU_Drive/BU_Backups/$host/BU\ Backup* >/dev/null 2>&1
+    touch /run/media/$user/BU_Drive/BU_Backups/$host/"BU Backup had some errors: $(date)"
+
     echo "There were errors! Try running the command again to correct them." >&2
     echo "- If errors persist then you may have corrupt files or failing hardware." >&2
     exit 1
@@ -130,7 +142,7 @@ if [ ! -d /run/media/$user/BU_Drive/BU_Backups/$host/ ]; then
 
 fi
 
-echo $'\n'$"BU Restore Function (Version 1.0)"
+echo $'\n'$"BU Restore Function (Version 1.1)"
 echo $'\n'$"WARNING!"
 echo "Any new files created in /home since last backup WILL BE DELETED!"
 echo "Are you sure you want to restore now? [y/N]"
@@ -166,7 +178,7 @@ read -n 1 -s choice
 
             else
 
-                # Returning to Main Menu if rsync fails:
+                # If rsync fails:
 
                 # Clear any accidental input during restore:
                 read -t 1 -n 10000 discard
@@ -195,8 +207,7 @@ help() {
 
 less << _EOF_
 
- BU - USB Backup Tool (Version 1.0) -- Help
- (v. 1.0)
+ BU - USB Backup Tool (Version 1.1) -- Help
 
  Press "q" to exit this Help page.
 
@@ -241,10 +252,10 @@ less << _EOF_
 
  Disclaimer:
 
- THIS SOFTWARE IS PROVIDED BY EZEELINUX “AS IS” AND ANY EXPRESS OR IMPLIED
+ THIS SOFTWARE IS PROVIDED BY GoByteGo “AS IS” AND ANY EXPRESS OR IMPLIED
  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
- EVENT SHALL EZEELINUX BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ EVENT SHALL GoByteGo BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
@@ -261,13 +272,13 @@ _EOF_
 # Checking for command line arguments:
 
 if [ "$1" == "--help" ]; then
-	help
-	exit
+      help
+      exit
 fi
 
 if [ "$1" == "--restore" ]; then
-	drive_test
-	restore
+      drive_test
+      restore
 fi
 
 if  [ -n "$1"  ]; then
@@ -278,7 +289,8 @@ fi
 
 # Tell 'em who we are...
 
-echo "BU -- USB Backup Tool (Version 1.0)"
+echo "BU -- USB Backup Tool (Version 1.1)"
 drive_test
 backup
+
 
